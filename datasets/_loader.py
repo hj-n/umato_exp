@@ -27,7 +27,13 @@ class Dataset:
         assert len(self.data) == len(self.label)
 
     def __repr__(self):
-        return f"[Dataset <{self.name}>: {len(self.data)}]"
+        return f"[Dataset | {self.name}: {len(self.data)}]"
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, item):
+        return self.data[item], self.label[item]
 
 
 def list_datasets():
