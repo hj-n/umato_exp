@@ -7,7 +7,7 @@ import MulticoreTSNE
 
 if __name__ == "__main__":
     datasets = load_all_datasets()
-    sample_sizes = [1, 2, 5, 10, 20, 30, 50, 60, 80, 100][2:]
+    sample_sizes = [1, 2, 5, 10, 20, 30, 50, 60, 80, 100]
     algorithms = [('umato', lambda data: umato.UMATO(hub_num=min(300, len(data) - 1),
                                                      n_neighbors=min(15, len(data) - 1)).fit_transform(data)),
                   ('umap', lambda data: umap.UMAP(n_neighbors=min(15, len(data) - 1)).fit_transform(data)),
@@ -29,6 +29,8 @@ if __name__ == "__main__":
             subset_data = dataset.data[subset_indexes]
             for algorithm in algorithms:
                 alg_name, alg_func = algorithm
+                if subset_size < 16:
+                    continue
 
                 subset_embeddings = alg_func(subset_data)
 
