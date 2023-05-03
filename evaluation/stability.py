@@ -14,8 +14,8 @@ if __name__ == "__main__":
                   ('tsne', lambda data: MulticoreTSNE.MulticoreTSNE().fit_transform(data)),
                   ]
 
-    for dataset in datasets:
-        print(dataset)
+    for i, dataset in enumerate(datasets):
+        print(f"({i + 1}/{len(datasets)}) {dataset}")
 
         dataset_embeddings = {}
         for algorithm in algorithms:
