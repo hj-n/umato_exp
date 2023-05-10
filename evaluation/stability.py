@@ -29,9 +29,9 @@ if __name__ == "__main__":
                                                                n_neighbors=15).fit_transform(data)),
                   ('UMAP', 0, lambda data: umap.UMAP(n_neighbors=15).fit_transform(data)),
                   ('t-SNE', 0, lambda data: MulticoreTSNE.MulticoreTSNE().fit_transform(data)),
-                  ('PacMAP', 0, lambda data: pacmap.PaCMAP().fit_transform(data)),
+                  ('PacMAP', 0, lambda data: pacmap.PaCMAP(n_neighbors=15).fit_transform(data)),
                   ('PCA', 0, lambda data: sklearn.decomposition.PCA(n_components=2).fit_transform(data)),
-                  ('Isomap', 0, lambda data: sklearn.manifold.Isomap().fit_transform(data)),
+                  ('Isomap', 0, lambda data: sklearn.manifold.Isomap(n_neighbors=15).fit_transform(data)),
                   ('TriMap', 0, lambda data: trimap.TRIMAP().fit_transform(data)),
                   ('DensMAP', 0, lambda data: umap.UMAP(densmap=True).fit_transform(data))
                   ]
