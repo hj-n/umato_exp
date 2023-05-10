@@ -37,7 +37,7 @@ if __name__ == "__main__":
                   ]
 
     bench_data = {}
-    for i, dataset in enumerate(datasets[:1]):
+    for i, dataset in enumerate(datasets):
         bench_data[dataset.name] = {}
 
         print(f"({i + 1}/{len(datasets)}) {dataset}")
