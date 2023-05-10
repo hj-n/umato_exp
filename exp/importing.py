@@ -34,7 +34,7 @@ def run_densmap(X):
 	return reducer.fit_transform(X)
 
 def run_umato(X):
-	hub_num = int(X.shape[0] * 0.1)
+	hub_num = int(X.shape[0] / 30)
 	reducer = umato.UMATO(n_neighbors=15, hub_num=hub_num)
 	return reducer.fit_transform(X)
 
