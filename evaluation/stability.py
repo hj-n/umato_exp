@@ -69,5 +69,5 @@ if __name__ == "__main__":
 
                 print(f"\t\t{alg_name:15}: {disparity:.4f}")
 
-    with open('stability.json', 'w') as f:
-        json.dump(bench_data, f, indent=4)
+        with open('stability.json', 'w') as f:
+            json.dump(bench_data, f, indent=4)
