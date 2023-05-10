@@ -4,6 +4,7 @@ import umato
 import trimap ## trimap ## pip install trimap
 from MulticoreTSNE import MulticoreTSNE as TSNE ## pip install MulticoreTSNE
 from sklearn.decomposition import PCA ## pca
+from sklearn.manifold import Isomap	## isomap ## conda install scikit-learn
 
 import os
 import numpy as np
@@ -37,5 +38,11 @@ def run_umato(X):
 	reducer = umato.UMATO(n_neighbors=15, hub_num=hub_num)
 	return reducer.fit_transform(X)
 
+def run_pca(X):
+	reducer = PCA(n_components=2)
+	return reducer.fit_transform(X)
 
+def run_isomap(X):
+	reducer = Isomap(n_neighbors=15, n_components=2)
+	return reducer.fit_transform(X)
 
