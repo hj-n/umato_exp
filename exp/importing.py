@@ -13,6 +13,8 @@ from tqdm import tqdm
 import timeit
 
 
+
+
 def run_umap(X):
 	reducer = umap.UMAP(n_neighbors=15, n_components=2)
 	return reducer.fit_transform(X)
