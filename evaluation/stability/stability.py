@@ -14,17 +14,12 @@ import pickle
 warnings.simplefilter('ignore')
 
 THRESHOLD_DATASET_SIZE = 5000
+embeddings_dump_dir = 'embeddings'
 
 if __name__ == "__main__":
     datasets = [dataset for dataset in load_all_datasets() if len(dataset) >= THRESHOLD_DATASET_SIZE]
     sample_sizes = [1, 2, 5, 10, 20, 30, 50, 60, 80, 100]
-    algorithms = [('UMATO//20', 40, lambda data, *args: umato.UMATO(hub_num=len(data) // 20,
-                                                                    n_neighbors=15).fit_transform(data)),
-                  ('UMATO//30', 60, lambda data, *args: umato.UMATO(hub_num=len(data) // 30,
-                                                                    n_neighbors=15).fit_transform(data)),
-                  ('UMATO//40', 80, lambda data, *args: umato.UMATO(hub_num=len(data) // 40,
-                                                                    n_neighbors=15).fit_transform(data)),
-                  ('UMATO_N//30', -1, lambda data, superset_size, *args: umato.UMATO(
+    algorithms = [('UMATO_N//30(15)', -1, lambda data, superset_size, *args: umato.UMATO(
                       hub_num=superset_size // 30,
                       n_neighbors=15).fit_transform(data)),
                   ('UMATO-75(50)', 75, lambda data, *args: umato.UMATO(hub_num=75,
@@ -50,7 +45,7 @@ if __name__ == "__main__":
             alg_name, limit, alg_func = algorithm
             assert len(dataset) >= limit
             dataset_embeddings[alg_name] = alg_func(dataset.data, len(dataset))
-        with open(f"{dataset.name}.embeddings", "wb") as f:
+        with open(f"{embeddings_dump_dir}/{dataset.name}.embeddings", "wb") as f:
             pickle.dump(dataset_embeddings, f)
 
         subset_embeddings = {}
@@ -77,7 +72,7 @@ if __name__ == "__main__":
                 bench_data[dataset.name][sample_size][alg_name] = disparity
 
                 print(f"\t\t{alg_name:15}: {disparity:.4f}")
-        with open(f"{dataset.name}.subsets.embeddings", "wb") as f:
+        with open(f"{embeddings_dump_dir}/{dataset.name}.subsets.embeddings", "wb") as f:
             pickle.dump(subset_embeddings, f)
 
         with open('stability.json', 'w') as f:
