@@ -9,6 +9,7 @@ import sklearn
 import trimap
 import json
 import warnings
+import pickle
 
 warnings.simplefilter('ignore')
 
@@ -17,23 +18,25 @@ THRESHOLD_DATASET_SIZE = 5000
 if __name__ == "__main__":
     datasets = [dataset for dataset in load_all_datasets() if len(dataset) >= THRESHOLD_DATASET_SIZE]
     sample_sizes = [1, 2, 5, 10, 20, 30, 50, 60, 80, 100]
-    algorithms = [('UMATO//10', 20, lambda data: umato.UMATO(hub_num=len(data) // 10,
-                                                             n_neighbors=15).fit_transform(data)),
-                  ('UMATO//20', 40, lambda data: umato.UMATO(hub_num=len(data) // 20,
-                                                             n_neighbors=15).fit_transform(data)),
-                  ('UMATO//40', 80, lambda data: umato.UMATO(hub_num=len(data) // 40,
-                                                             n_neighbors=15).fit_transform(data)),
-                  ('UMATO//80', 160, lambda data: umato.UMATO(hub_num=len(data) // 80,
-                                                              n_neighbors=15).fit_transform(data)),
-                  ('UMATO//160', 320, lambda data: umato.UMATO(hub_num=len(data) // 160,
-                                                               n_neighbors=15).fit_transform(data)),
-                  ('UMAP', 0, lambda data: umap.UMAP(n_neighbors=15).fit_transform(data)),
-                  ('t-SNE', 0, lambda data: MulticoreTSNE.MulticoreTSNE().fit_transform(data)),
-                  ('PacMAP', 0, lambda data: pacmap.PaCMAP(n_neighbors=15).fit_transform(data)),
-                  ('PCA', 0, lambda data: sklearn.decomposition.PCA(n_components=2).fit_transform(data)),
-                  ('Isomap', 0, lambda data: sklearn.manifold.Isomap(n_neighbors=15).fit_transform(data)),
-                  ('TriMap', 0, lambda data: trimap.TRIMAP().fit_transform(data)),
-                  ('DensMAP', 0, lambda data: umap.UMAP(densmap=True).fit_transform(data))
+    algorithms = [('UMATO//20', 40, lambda data, *args: umato.UMATO(hub_num=len(data) // 20,
+                                                                    n_neighbors=15).fit_transform(data)),
+                  ('UMATO//30', 60, lambda data, *args: umato.UMATO(hub_num=len(data) // 30,
+                                                                    n_neighbors=15).fit_transform(data)),
+                  ('UMATO//40', 80, lambda data, *args: umato.UMATO(hub_num=len(data) // 40,
+                                                                    n_neighbors=15).fit_transform(data)),
+                  ('UMATO_N//30', -1, lambda data, superset_size, *args: umato.UMATO(
+                      hub_num=superset_size // 30,
+                      n_neighbors=15).fit_transform(data)),
+                  ('UMATO-75(50)', 75, lambda data, *args: umato.UMATO(hub_num=75,
+                                                                       n_neighbors=50).fit_transform(data)),
+                  ('UMATO-75(15)', 75, lambda data, *args: umato.UMATO(hub_num=75,
+                                                                       n_neighbors=15).fit_transform(data)),
+                  ('UMAP', 0, lambda data, *args: umap.UMAP(n_neighbors=15).fit_transform(data)),
+                  ('t-SNE', 0, lambda data, *args: MulticoreTSNE.MulticoreTSNE().fit_transform(data)),
+                  ('PacMAP', 0, lambda data, *args: pacmap.PaCMAP(n_neighbors=15).fit_transform(data)),
+                  ('Isomap', 0, lambda data, *args: sklearn.manifold.Isomap(n_neighbors=15).fit_transform(data)),
+                  ('TriMap', 0, lambda data, *args: trimap.TRIMAP().fit_transform(data)),
+                  ('DensMAP', 0, lambda data, *args: umap.UMAP(densmap=True).fit_transform(data))
                   ]
 
     bench_data = {}
@@ -46,28 +49,36 @@ if __name__ == "__main__":
         for algorithm in algorithms:
             alg_name, limit, alg_func = algorithm
             assert len(dataset) >= limit
-            dataset_embeddings[alg_name] = alg_func(dataset.data)
+            dataset_embeddings[alg_name] = alg_func(dataset.data, len(dataset))
+        with open(f"{dataset.name}.embeddings", "wb") as f:
+            pickle.dump(dataset_embeddings, f)
 
+        subset_embeddings = {}
         for sample_size in sample_sizes:
             bench_data[dataset.name][sample_size] = {}
-            sample_size_bench = []
+            subset_embeddings[sample_size] = {}
             subset_size = len(dataset) * sample_size // 100
             print(f"\tSampling {sample_size}% ({subset_size})")
             subset_indexes = np.random.choice(np.arange(len(dataset)), size=subset_size, replace=False)
+            subset_embeddings[sample_size]['index'] = subset_indexes
             subset_data = dataset.data[subset_indexes]
             for algorithm in algorithms:
                 alg_name, limit, alg_func = algorithm
+                if limit == -1:
+                    limit = len(dataset) // 30
                 if subset_size < limit:
                     continue
 
-                subset_embeddings = alg_func(subset_data)
+                subset_embeddings[sample_size][alg_name] = alg_func(subset_data, len(dataset))
 
-                _, _, disparity = procrustes(subset_embeddings, dataset_embeddings[alg_name][subset_indexes])
+                _, _, disparity = procrustes(subset_embeddings[sample_size][alg_name],
+                                             dataset_embeddings[alg_name][subset_indexes])
 
-                sample_size_bench.append({alg_name: disparity})
                 bench_data[dataset.name][sample_size][alg_name] = disparity
 
                 print(f"\t\t{alg_name:15}: {disparity:.4f}")
+        with open(f"{dataset.name}.subsets.embeddings", "wb") as f:
+            pickle.dump(subset_embeddings, f)
 
         with open('stability.json', 'w') as f:
             json.dump(bench_data, f, indent=4)
