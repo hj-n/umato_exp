@@ -76,4 +76,4 @@ if __name__ == "__main__":
             pickle.dump(subset_embeddings, f)
 
         with open('stability.json', 'w') as f:
-            json.dump(bench_data, f, indent=4, sort_keys=True)
+            json.dump(bench_data, f, indent=4)
