@@ -2,7 +2,8 @@ import umap
 import pacmap
 import umato
 import trimap
-from MulticoreTSNE import MulticoreTSNE as TSNE
+# from MulticoreTSNE import MulticoreTSNE as TSNE
+from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 from sklearn.manifold import Isomap, LocallyLinearEmbedding
 
