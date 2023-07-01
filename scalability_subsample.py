@@ -153,28 +153,31 @@ for args in alg_list:
     dataset_list = []
     if args.dataset is None:
         # For all datasets
-        rootdir = "datasets/npy"
-        for rootdir, dirs, files in os.walk(rootdir):
-            dataset_list = dirs
-            break
-        # dataset_list = ["paris_housing_classification", "dry_bean", "htru2", "rice_seed_gonen_jasmine", "magic_gamma_telescope", "letter_recognition", "fraud_detection_bank"]
+        #rootdir = "datasets/npy"
+        #for rootdir, dirs, files in os.walk(rootdir):
+        #    dataset_list = dirs
+        #    break
+        dataset_list = ["paris_housing_classification", "dry_bean", "htru2", "rice_seed_gonen_jasmine", "magic_gamma_telescope", "letter_recognition", "fraud_detection_bank"]
     else:
         dataset_list = sorted(args.dataset)
 
     # load dataset with .npy file and run algorithm for specified number of times
     for i, datadir in enumerate(dataset_list):
-            print(f"Dataset: {datadir} ({(i+1)}/{len(dataset_list)})")
+        print(f"Dataset: {datadir} ({(i+1)}/{len(dataset_list)})")
+        # If not using subsample, erase the following line
+        for sample_size in sample_lengths:
+            # If not using subsample, erase the following line
+            print(f"Sample size: {sample_size}")
             print(f"Run [{args.classname}] as ")
             x = np.load(f"datasets/npy/{datadir}/data.npy")
             label = np.load(f"datasets/npy/{datadir}/label.npy")
+            # randomly sample data with length of sample_size from x
+            # If not using subsample, erase the following lines under if statement
+            if sample_size < len(x):
+                idx = np.random.choice(len(x), sample_size, replace=False)
+                x_sub = x[idx]
 
-
-        elapsed_time = []
-        # For experiment
-        if args.module == "umato":
-            hp_dict["hub_num"] = 300 if x.shape[0] > 300 else x.shape[0] / 2
-            print("[UMATO] hub_num: ", hp_dict["hub_num"])
-
+            elapsed_time = []
 
             for i in range(args.repeat + 1):
                 # timeout after an hour
@@ -182,7 +185,9 @@ for args in alg_list:
                 signal.alarm(3600)
                 try:
                     start = time.time()
-                    y = alg_class(**hp_dict).fit_transform(x)
+                    y = alg_class(**hp_dict).fit_transform(x_sub)
+                    # not using subsample
+                    # y = alg_class(**hp_dict).fit_transform(x)
                     end = time.time()
                     signal.alarm(0)
                     if i > 0:
@@ -199,14 +204,18 @@ for args in alg_list:
             avg_time = sum(elapsed_time) / len(elapsed_time)
             print(
                 # exclude the size of sample if not using subsample
-                f"[{args.classname}, {datadir}] average time of {args.repeat} trials: {avg_time}"
+                f"[{args.classname}, {datadir}] average time of {args.repeat} trials with sample of size {sample_size}: {avg_time}"
             )
-            avg_time_dict[datadir] = avg_time
+            avg_time_dict[datadir+"."+str(sample_size)] = avg_time
+            # not using subsample
+            # avg_time_dict[datadir] = avg_time
 
 
     # load scalability.csv file as a dataframe and save
     try:
-        df = pd.read_csv("scalability/scalability.csv")
+        df = pd.read_csv("scalability/scalability_subsample.csv")
+        # not using subsample
+        # df = pd.read_csv("scalability/scalability.csv")
     # if csv does not exist, than create a new dataframe
     except OSError:
         df = pd.DataFrame(columns=(["name", "repeat_num"] + dataset_list))
@@ -223,4 +232,6 @@ for args in alg_list:
     )
     if "Unnamed: 0" in df.columns:
         df.drop(["Unnamed: 0"], axis=1, inplace=True)
-    df.to_csv("scalability/scalability.csv")
+    df.to_csv("scalability/scalability_subsample.csv")
+    # not using subsample
+    # df.to_csv("scalability/scalability.csv")
