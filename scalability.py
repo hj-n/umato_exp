@@ -168,7 +168,13 @@ for args in alg_list:
             x = np.load(f"datasets/npy/{datadir}/data.npy")
             label = np.load(f"datasets/npy/{datadir}/label.npy")
 
-            elapsed_time = []
+
+        elapsed_time = []
+        # For experiment
+        if args.module == "umato":
+            hp_dict["hub_num"] = 300 if x.shape[0] > 300 else x.shape[0] / 2
+            print("[UMATO] hub_num: ", hp_dict["hub_num"])
+
 
             for i in range(args.repeat + 1):
                 # timeout after an hour
