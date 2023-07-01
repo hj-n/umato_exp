@@ -166,7 +166,7 @@ for args in alg_list:
         elapsed_time = []
         # For experiment
         if args.module == "umato":
-            hp_dict["hub_num"] = len(x) / 30
+            hp_dict["hub_num"] = 300 if x.shape[0] > 300 else x.shape[0] / 2
             print("[UMATO] hub_num: ", hp_dict["hub_num"])
 
         for i in range(args.repeat + 1):

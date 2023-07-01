@@ -18,21 +18,20 @@ DATASETS = os.listdir("../datasets/npy/")
 
 dr_id_list = ["pca", "pacmap","umap", "trimap", "tsne", "densmap", "umato", "isomap"]	
 metric_id_list = (
-	["trustworthiness"] *5 +
-	["continuity"] * 5 + 
-	["neighbor_dissimilarity"] * 5 + 
-	["kl_divergence"] * 3 +
+	["trustworthiness"] +
+	["continuity"] + 
+	["kl_divergence"] * 3+
 	["distance_to_measure"] * 3 +
 	["steadiness", "cohesiveness"] +
 	["stress", "pearson_r", "spearman_rho"]
 )
 params_list = (
-    [{"k": x} for x in [5, 10, 15, 20, 25]] * 3  +
+    [{"k": x} for x in [20]] * 2  +
     [{"sigma": x} for x in [0.01, 0.1, 1] ] * 2 +
     [{}] * 5
 )
 
-for dataset in DATASETS:
+for dataset in DATASETS[72:]:
 
 	print(f"{dataset} computing...")
 	if os.path.exists(f"./performace/{dataset}.csv"):
@@ -43,8 +42,8 @@ for dataset in DATASETS:
 
 	data_size = data.shape[0]
   
-	if data_size > 5000:
-		data = data[np.random.choice(data_size, 5000, replace=False)]
+	if data_size > 10000:
+		data = data[np.random.choice(data_size, 10000, replace=False)]
 
 	metric_list = []
 	dr_list = []
@@ -55,14 +54,15 @@ for dataset in DATASETS:
 		print("    ..", metric_id)
 		for dr_id in tqdm(dr_id_list):
 			print("       ..", dr_id, end=": ")
-			result = ph.run(data, dr_id, metric_id, params_list[i])
+			try:
+				result = ph.run(data, dr_id, metric_id, params_list[i])
 
-			metric_list.append(metric_id)
-			dr_list.append(dr_id)
-			score_list.append(result)
-			print(result)
-
-	
+				metric_list.append(metric_id)
+				dr_list.append(dr_id)
+				score_list.append(result)
+				print(result)
+			except:
+				pass
 	df = pd.DataFrame({
 		"metric": metric_list,
 		"dr": dr_list,
@@ -70,6 +70,6 @@ for dataset in DATASETS:
 	})
 	
 
-	df.to_csv(f"./performace/{dataset}.csv")
+	df.to_csv(f"./performance/{dataset}.csv")
 
 	

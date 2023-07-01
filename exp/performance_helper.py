@@ -97,7 +97,7 @@ def run(raw, dr_id, metric_id, metric_params):
 			return zadu.ZADU(spec, raw).measure(emb)[0][metric_id] * multiplier
 		
 	if dr_id == "umato":
-		bound = {"n_neighbors": (2, 100), "min_dist": (0.01, 0.99), "hub_num": (20, 200)}
+		bound = {"n_neighbors": (2, 100), "min_dist": (0.01, 0.99), "hub_num": (20, raw.shape[0] - 1 if raw.shape[0] - 1 < 400 else 400)}
 
 		def f(n_neighbors, min_dist, hub_num):
 			reducer = umato.UMATO(n_neighbors=int(n_neighbors), min_dist=float(min_dist), hub_num=int(hub_num))
@@ -126,11 +126,12 @@ def run(raw, dr_id, metric_id, metric_params):
 			f=f,
 			pbounds=bound,
 			random_state=1,
+			verbose=0
 		)
 
 		optimizer.maximize(
-			init_points=10,
-			n_iter=20,
+			init_points=5,
+			n_iter=10,
 		)	
 		return optimizer.max["target"] * multiplier
 	else:
