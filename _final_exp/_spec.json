@@ -1,0 +1,42 @@
+{
+	"spec": [
+		{ "id": "tnc", "params": { "k": 10 } },
+		{ "id": "tnc", "params": { "k": 20 } },
+		{ "id": "tnc", "params": { "k": 30 } },
+		{ "id": "tnc", "params": { "k": 40 } },
+		{ "id": "tnc", "params": { "k": 50 } },
+		{ "id": "mrre", "params": { "k": 10 } },
+		{ "id": "mrre", "params": { "k": 20 } },
+		{ "id": "mrre", "params": { "k": 30 } },
+		{ "id": "mrre", "params": { "k": 40 } },
+		{ "id": "mrre", "params": { "k": 50 } },
+		{ "id": "snc" },
+		{ "id": "kl_div", "params": { "sigma": 0.01 }},
+		{ "id": "kl_div", "params": { "sigma": 0.1 }},
+		{ "id": "kl_div", "params": { "sigma": 1 }},
+		{ "id": "dtm", "params": { "sigma": 0.01 }},
+		{ "id": "dtm", "params": { "sigma": 0.1 }},
+		{ "id": "dtm", "params": { "sigma": 1 }},
+		{ "id": "stress"}
+	],
+	"retreiver": [
+		["trustworthiness", "continuity"],
+		["trustworthiness", "continuity"],
+		["trustworthiness", "continuity"],
+		["trustworthiness", "continuity"],
+		["trustworthiness", "continuity"],
+		["mrre_false", "mrre_missing"],
+		["mrre_false", "mrre_missing"],
+		["mrre_false", "mrre_missing"],
+		["mrre_false", "mrre_missing"],
+		["mrre_false", "mrre_missing"],
+		["steadiness", "cohesiveness"],
+		["kl_divergence"],
+		["kl_divergence"],
+		["kl_divergence"],
+		["distance_to_measure"],
+		["distance_to_measure"],
+		["distance_to_measure"],
+		["stress"]
+	]
+}

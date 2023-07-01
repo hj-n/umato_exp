@@ -31,15 +31,6 @@ def run(raw, dr_id, metric_id, metric_params):
 	if metric_id == "stress":
 		spec_id = "stress"
 	
-	# if metric_id == "topographic_product":
-	# 	spec_id = "topo"
-	
-	if metric_id == "pearson_r":
-		spec_id = "pr"
-	
-	if metric_id == "spearman_rho":
-		spec_id = "srho"
-
 	
 	if metric_id in {"neighbor_dissimilarity", "kl_divergence", "distance_to_measuere"}:
 		multiplier = -1

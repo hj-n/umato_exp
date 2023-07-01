@@ -1,0 +1,32 @@
+{
+    "umap" : {
+        "bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99]}
+		},
+		"pacmap" : {
+			"bounds": {"n_neighbors": [2, 100], "MN_ratio": [0.1, 5], "FP_ratio": [0.1, 5] }
+		},
+		"trimap" : {
+			"bounds": {"n_inliers": [2, 100], "n_outliers": [2, 100]}
+		},
+		"tsne" : {
+      "bounds": { "perplexity": [2, 500] }
+		},
+    "umato": {
+      "bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99], "hub_num": [20, 400]}
+		},
+    "pca": { 
+			"bounds": { }
+		},
+    "isomap": {
+      "bounds": {"n_neighbors": [2, 100]}
+		},
+    "lle": { 
+      "bounds": {"n_neighbors": [2, 100]}
+		},
+    "lamp": { 
+			"bounds": { }
+		},
+    "lmds": {
+      "bounds": {"hub_num": [20, 400]}
+		}
+}
