@@ -1,5 +1,6 @@
 import json
 from pprint import pprint
+from itertools import chain
 from matplotlib import pyplot as plt
 
 source = 'results.json'
@@ -7,7 +8,7 @@ source = 'results.json'
 with open(source, 'r') as f:
     data = json.load(f)
 
-algorithms_to_compare = ['DensMAP', 'Isomap', 'PaCMAP', 'TriMap', 'UMAP', 't-SNE', 'UMATO-75(15)']
+algorithms_to_compare = ['DensMAP', 'Isomap', 'PaCMAP', 'TriMap', 'UMAP', 't-SNE', 'UMATO-75(50)']
 
 filtered_data = {}
 
@@ -31,7 +32,8 @@ for dataset in filtered_data:
                 sample_size_int = int(sample_size)
                 if sample_size_int not in results_per_sample_size[alg_name]:
                     results_per_sample_size[alg_name][sample_size_int] = []
-                results_per_sample_size[alg_name][sample_size_int].append(filtered_data[dataset][sample_size][alg_name])
+                results_per_sample_size[alg_name][sample_size_int].append(
+                    filtered_data[dataset][sample_size][alg_name])
 
 pprint(results_per_sample_size)
 
@@ -39,13 +41,19 @@ fig, ax = plt.subplots()
 
 target_sample_size = 10
 
+data = [list(chain(*results_per_sample_size[alg_name].values())) for alg_name in results_per_sample_size.keys()]
+
 data = [results_per_sample_size[alg_name][target_sample_size] for alg_name in results_per_sample_size.keys() if
         target_sample_size in results_per_sample_size[alg_name]]
+
 
 # Create box plots for each algorithm
 ax.boxplot(data)
 
 # Set the x-ticks labels to be the algorithms names
-ax.set_xticklabels(map(lambda x: 'UMATO' if 'UMATO' in x else x, results_per_sample_size.keys()))
+ax.set_xticklabels(map(lambda x: 'UMATO(75)' if 'UMATO' in x else x, results_per_sample_size.keys()))
 
+plt.title("Subsample Stability of DR techniques")
+ax.set_ylabel("Procrustes Distance")
+plt.savefig('hub-75.png')
 plt.show()
