@@ -41,7 +41,7 @@ for alg_name in results_per_sample_size:
         if len(results_per_sample_size[alg_name][sample_size]) == 14:
             avg = np.mean(results_per_sample_size[alg_name][sample_size])
             std = np.std(results_per_sample_size[alg_name][sample_size])
-            combined = f"{avg:.3f}, {std:.3f}"
+            combined = f"{avg:.2f}, {std:.2f}"
             new_row = pd.DataFrame({"Algorithm": [alg_name], "Sample Size": [sample_size], "Avg & Std": [combined]})
         else:
             new_row = pd.DataFrame({"Algorithm": [alg_name], "Sample Size": [sample_size], "Avg & Std": ["N/A"]})
