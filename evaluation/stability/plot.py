@@ -8,7 +8,7 @@ source = 'results.json'
 with open(source, 'r') as f:
     data = json.load(f)
 
-algorithms_to_compare = ['DensMAP', 'Isomap', 'PaCMAP', 'TriMap', 'UMAP', 't-SNE', 'UMATO-75(50)']
+algorithms_to_compare = ['DensMAP', 'Isomap', 'PaCMAP', 'TriMap', 'UMAP', 't-SNE', 'UMATO-75(50)', 'UMATO-300(50)']
 
 filtered_data = {}
 
@@ -46,14 +46,14 @@ data = [list(chain(*results_per_sample_size[alg_name].values())) for alg_name in
 data = [results_per_sample_size[alg_name][target_sample_size] for alg_name in results_per_sample_size.keys() if
         target_sample_size in results_per_sample_size[alg_name]]
 
-
 # Create box plots for each algorithm
 ax.boxplot(data)
 
 # Set the x-ticks labels to be the algorithms names
-ax.set_xticklabels(map(lambda x: 'UMATO(75)' if 'UMATO' in x else x, results_per_sample_size.keys()))
+ax.set_xticklabels(map(lambda x: 'UMATO\n(75)' if 'UMATO-75' in x else 'UMATO\n(300)' if 'UMATO-300' in x else x,
+                       results_per_sample_size.keys()))
 
 plt.title("Subsample Stability of DR techniques")
 ax.set_ylabel("Procrustes Distance")
-plt.savefig('hub-75.png')
+plt.savefig('out.png')
 plt.show()
