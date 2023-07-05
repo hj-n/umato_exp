@@ -28,7 +28,7 @@ for dataset in DATASETS:
 
 	size = raw.shape[0]
 
-	if size > 10000:
+	if size <= 10000:
 		continue
 
 	zadu_obj = zadu.ZADU([{ "id": "tnc", "params": { "k": 10 } }], raw)
