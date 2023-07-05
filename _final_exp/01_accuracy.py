@@ -8,7 +8,7 @@ import pandas as pd
 
 from bayes_opt import BayesianOptimization
 from tqdm import tqdm
-
+import time
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -25,8 +25,13 @@ for dataset in DATASETS:
 	
 	## load file and initialize zadu object
 	raw = np.load(f"../datasets/npy/{dataset}/data.npy")	
-	zadu_obj = zadu.ZADU([{ "id": "kl_div", "params": { "sigma": 0.1 } }], raw)
+
 	size = raw.shape[0]
+
+	if size > 10000:
+		continue
+
+	zadu_obj = zadu.ZADU([{ "id": "tnc", "params": { "k": 10 } }], raw)
 
 
 	## phase 1: find optimal embedding based on KL divergence (0.1)
@@ -35,23 +40,35 @@ for dataset in DATASETS:
 		if len(METADATA[dr_technique]["bounds"]) > 0:
 			bound = METADATA[dr_technique]["bounds"]
 
-			if "n_neighbors" in bound.keys():
-				bound["n_neighbors"] = (2, size-1)
-			if "n_inliers" in bound.keys():
-				bound["n_inliers"] = (2, size-1)
-			if "n_outliers" in bound.keys():
-				bound["n_outliers"] = (2, size-1)
-			if "hub_num" in bound.keys():
-				bound["hub_num"] = (2, size-1)
+			if "n_neighbors" in bound.keys() and bound["n_neighbors"][1] > size-2:
+				bound["n_neighbors"] = (2, size-2)
+			if "n_inliers" in bound.keys() and bound["n_inliers"][1] > size-2:
+				bound["n_inliers"] = (2, size-2)
+			if "n_outliers" in bound.keys() and bound["n_outliers"][1] > size-2:
+				bound["n_outliers"] = (2, size-2)
+			if "hub_num" in bound.keys() and bound["hub_num"][1] > size / 4:
+				bound["hub_num"] = (2, size / 4)
 
 
 			runner_function_name = f"run_{dr_technique}"
 			def f(**kwargs):
-				emb = getattr(drp, runner_function_name)(raw, **kwargs)
-				return zadu_obj.measure(emb)[0]["kl_divergence"] * -1
+				try:
+					start = time.time()
+					emb = getattr(drp, runner_function_name)(raw, **kwargs)
+					end = time.time()
+					print("Generating embedding:", end - start)
+					start = time.time()
+					score = (2 * zadu_obj.measure(emb)[0]["trustworthiness"] * zadu_obj.measure(emb)[0]["continuity"]) / (zadu_obj.measure(emb)[0]["trustworthiness"] + zadu_obj.measure(emb)[0]["continuity"])
+					end = time.time()
+					print("Computing score:", end - start)
+				except:
+					score = 0
+
+				print("Score:", score)
+				return score
 			
-			optimizer = BayesianOptimization(f=f, pbounds=bound, verbose=0)
-			optimizer.maximize(init_points=1, n_iter=2)
+			optimizer = BayesianOptimization(f=f, pbounds=bound, verbose=0, allow_duplicate_points=True)
+			optimizer.maximize(init_points=10, n_iter=20)
 			params = optimizer.max["params"]
 		else:
 			params = {}

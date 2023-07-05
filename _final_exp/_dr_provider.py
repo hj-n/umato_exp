@@ -2,12 +2,11 @@ import umap
 import pacmap
 import umato
 import trimap
-# from MulticoreTSNE import MulticoreTSNE as TSNE
-from sklearn.manifold import TSNE
+from MulticoreTSNE import MulticoreTSNE as TSNE
+# from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 from sklearn.manifold import Isomap, LocallyLinearEmbedding
 
-from topo.layouts import isomap
 
 from sklearn.datasets import load_iris
 import _lamp as lamp
@@ -79,8 +78,11 @@ def run_lamp(X):
 def run_lmds(X, hub_num):
 	hub_num = int(hub_num)
 
-	hubs = np.random.choice(X.shape[0], hub_num, replace=False)
-	DI = cdist(X[hubs, :], X, "euclidean")
-
-	return lmds.landmark_MDS(DI, hubs, 2)
+	emb = []
+	while len(emb) == 0:
+		hub_num = np.random.randint(20, X.shape[0]-2)
+		hubs = np.random.choice(X.shape[0], hub_num, replace=False)
+		DI = cdist(X[hubs, :], X, "euclidean")
+		emb = lmds.landmark_MDS(DI, hubs, 2)
+	return emb
 

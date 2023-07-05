@@ -77,6 +77,10 @@ def landmark_MDS(D, lands, dim):
 	X = -Lh.dot(Dm)/2.
 	X -= np.tile(np.mean(X,axis=1),(N, 1)).T
 
+	## check whether X contains NaN
+	if np.any(np.isnan(X)):
+		return []
+
 	_, evecs = sp.linalg.eigh(X.dot(X.T))
 
 	return (evecs[:,::-1].T.dot(X)).T
