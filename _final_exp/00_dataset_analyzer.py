@@ -100,4 +100,5 @@ df = pd.DataFrame({
 })
 
 ## print df pretty
-print(tabulate(df, headers='keys', tablefmt='psql'))
+# print(tabulate(df, headers='keys', tablefmt='psql'))
+print(df.to_latex(index=False))

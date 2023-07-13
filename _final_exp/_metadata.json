@@ -1,29 +1,41 @@
 {
-		"umato": {
-      "bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99], "hub_num": [20, 400]}
+		"umap" : {
+			"bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99] },
+			"default": { "n_neighbors": 15, "min_dist": 0.1 }
 		},
-    "umap" : {
-        "bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99]}
+		"umato": {
+      "bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99], "hub_num": [20, 400]},
+			"default": { "n_neighbors": 16, "min_dist": 0.1, "hub_num": 75 }
 		},
 		"pacmap" : {
-			"bounds": {"n_neighbors": [2, 100], "MN_ratio": [0.1, 5], "FP_ratio": [0.1, 5] }
+			"bounds": {"n_neighbors": [2, 100], "MN_ratio": [0.1, 5], "FP_ratio": [0.1, 5] },
+			"default": { "n_neighbors": 15, "MN_ratio": 0.5, "FP_ratio": 2.0 }
 		},
 		"tsne" : {
-      "bounds": { "perplexity": [5, 50] }
+      "bounds": { "perplexity": [5, 50] },
+			"default": { "perplexity": 30 }
 		},
 		"trimap" : {
-			"bounds": {"n_inliers": [2, 100], "n_outliers": [2, 10]}
+			"bounds": {"n_inliers": [2, 100], "n_outliers": [2, 10]},
+			"default": { "n_inliers": 12, "n_outliers": 4 }
+
 		},
     "pca": { 
-			"bounds": { }
+			"bounds": { 
+				
+			},
+			"default": {}
 		},
     "lle": { 
-      "bounds": {"n_neighbors": [2, 100]}
+      "bounds": {"n_neighbors": [2, 100]},
+			"default": { "n_neighbors": 15 }
+
 		},
     "lamp": { 
 			"bounds": { }
 		},
     "lmds": {
-      "bounds": {"hub_num": [20, 400]}
+      "bounds": {"hub_num": [20, 400]},
+			"default": { "hub_num": 75 }
 		}
 }

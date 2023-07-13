@@ -17,7 +17,8 @@ METRICS = ["trustworthiness", "continuity", "mrre_false", "mrre_missing", "kl_di
 
 # METRICS = ["steadiness", "cohesiveness"]
 
-DR_TECHNIQUE = ["pca", "lle", "umap", "trimap", "pacmap", "tsne", "umato", "lamp", "lmds"]
+# DR_TECHNIQUE = ["pca", "lle", "umap", "trimap", "pacmap", "tsne", "umato", "lamp", "lmds"]
+DR_TECHNIQUE = ["umato", "umap", "tsne", "pca", "lle", "pacmap", "trimap", "lamp", "lmds"]
 
 # METRICS = ["distance_to_measure_sigma_1", "distance_to_measure_sigma_0.1", "distance_to_measure_sigma_0.01"]
 
@@ -59,7 +60,13 @@ df = pd.DataFrame({
 
 dr_technique_unique = DR_TECHNIQUE
 
+final_result = {}
+for dr_technique in dr_technique_unique:
+	final_result[dr_technique] = []
 
+
+
+rank_product = [1] * len(dr_technique_unique)
 for i, metric_prefix in enumerate(METRICS):
 	## check if metric_prefix is in metric_full
 	filtering = []
@@ -80,19 +87,22 @@ for i, metric_prefix in enumerate(METRICS):
 
 
 
-
 		mean_val = metric_technique_df["value"].mean()
 		std_val = metric_technique_df["value"].std()
 
-		val_list.append(f"{mean_val:.3f} \pm {std_val:.3f}")
+		val_list.append(f"{mean_val:.4f} \pm {std_val:.4f}")
 		mean_val_list.append(mean_val)
+
+		final_result[dr_technique].append(mean_val)
 
 	result_df = pd.DataFrame({
 		"dr_technique": dr_technique_unique,
 		"val": val_list
 	})
 
-	print(tabulate(result_df, headers='keys', tablefmt='psql'))
+
+
+	print(tabulate(result_df, headers='keys', tablefmt='psql', floatfmt=".5f"))
 	
 	## compute ranking of techniques
 	ranking = np.argsort(mean_val_list)
@@ -101,6 +111,16 @@ for i, metric_prefix in enumerate(METRICS):
 		technique_ranking = technique_ranking[::-1]
 	print("Ranking:", technique_ranking)
 	print("----------------------------")
+
+
+print("Final Result")
+final_result_df = pd.DataFrame(final_result).transpose()
+
+
+## vertical
+print(final_result_df.to_latex(index=False, float_format="%.4f" ))
+
+
 
 
 

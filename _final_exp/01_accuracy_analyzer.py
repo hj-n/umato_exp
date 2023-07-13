@@ -10,7 +10,7 @@ FILES = os.listdir("./01_accuracy/results/")
 
 METRICS = ["trustworthiness", "continuity", "kl_divergence", "distance_to_measure", "stress"]
 
-METRICS = ["kl_divergence_sigma_1", "kl_divergence_sigma_0.1", "kl_divergence_sigma_0.01"]
+METRICS = ["kl_divergence_sigma_1", "kl_divergence_sigma_0.1", "kl_divergence_sigma_0.01", "stress", "trustworthiness", "continuity",]
 
 
 for file in FILES:
