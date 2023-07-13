@@ -5,7 +5,7 @@
 		},
 		"umato": {
       "bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99], "hub_num": [20, 400]},
-			"default": { "n_neighbors": 16, "min_dist": 0.1, "hub_num": 75 }
+			"default": { "n_neighbors": 15, "min_dist": 0.1, "hub_num": 75 }
 		},
 		"pacmap" : {
 			"bounds": {"n_neighbors": [2, 100], "MN_ratio": [0.1, 5], "FP_ratio": [0.1, 5] },
