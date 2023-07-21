@@ -31,7 +31,7 @@ for dataset in DATASETS:
 
 
 	for dr_technique in METADATA.keys():
-		if "default" not in METADATA[dr_technique]:
+		if "scal" not in METADATA[dr_technique]:
 			continue
 		print("-", dr_technique)
 		times = []
@@ -40,7 +40,7 @@ for dataset in DATASETS:
 			runner_function_name = f"run_{dr_technique}"
 
 			start = time.time()
-			emb = getattr(drp, runner_function_name)(X, **METADATA[dr_technique]["default"])
+			emb = getattr(drp, runner_function_name)(X, **METADATA[dr_technique]["scal"])
 			end = time.time()
 
 			times.append(end-start)
@@ -78,13 +78,13 @@ for dataset in [ "covertype", "kddcup99"]:
 
 
 	for dr_technique in DR_TECHNIQUES:
-		if "default" not in METADATA[dr_technique]:
+		if "scal" not in METADATA[dr_technique]:
 			continue
 		print("-", dr_technique)
 		runner_function_name = f"run_{dr_technique}"
 
 		start = time.time()
-		emb = getattr(drp, runner_function_name)(X, **METADATA[dr_technique]["default"])
+		emb = getattr(drp, runner_function_name)(X, **METADATA[dr_technique]["scal"])
 		end = time.time()
 
 		

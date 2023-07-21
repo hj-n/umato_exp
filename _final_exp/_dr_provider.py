@@ -52,7 +52,7 @@ def run_umato(X, n_neighbors, min_dist, hub_num):
 	min_dist = float(min_dist)
 	hub_num = int(hub_num)
 
-	reducer = umato.UMATO(n_neighbors=n_neighbors, min_dist=min_dist, hub_num=hub_num)
+	reducer = umato.UMATO(n_neighbors=n_neighbors, min_dist=min_dist, hub_num=hub_num, random_state=42)
 	return reducer.fit_transform(X)
 
 def run_pca(X):
