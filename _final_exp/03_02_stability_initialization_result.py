@@ -9,26 +9,20 @@ import seaborn as sns
 
 from matplotlib import rc, rcParams
 
-result_files = os.listdir("./03_01_stability_subsampling/results/")
+result_files = os.listdir("./03_02_stability_init/results/")
 
 
 dataset_list = []
 dr_technique_list = []
-sampling_list = []
 disparity_list = []
 
-# result_files = ["epileptic_seizure_recognition.csv"]
-
-result_files.remove("sentiment_labeld_sentences.csv")
-# result_files = ["optical_recognition_of_handwritten_digits.csv", "paris_housing_classification.csv", "predicting_pulsar_star.csv"]
-
+# result_files =
 for result_file in result_files:
-	result_data = pd.read_csv(f"./03_01_stability_subsampling/results/{result_file}")
+	result_data = pd.read_csv(f"./03_02_stability_init/results/{result_file}")
 
 	dataset = result_file.split(".")[0]
 	dataset_list += [dataset]*len(result_data)
 	dr_technique_list += list(result_data["dr_technique"])
-	sampling_list += list(result_data["sampling"])
 	disparity_list += list(result_data["disparity"])
 
 	
@@ -37,7 +31,6 @@ for result_file in result_files:
 final_result = {
 	"dataset": dataset_list,
 	"dr_technique": dr_technique_list,
-	"sampling": sampling_list,
 	"disparity": disparity_list
 }
 
@@ -47,15 +40,15 @@ final_result = pd.DataFrame(final_result)
 
 
 ## pointplot
-plt.figure(figsize=(6.5, 3.5))
+plt.figure(figsize=(6.5, 2.4))
 sns.set(style="whitegrid")
 sns.pointplot(
 	y="dr_technique", x="disparity", 
 	data=final_result, join=False, hue="dr_technique",
-	order=["pca", "umato", "lmds", "pacmap","tsne", "lle",  "trimap", "lamp", "umap"]
+	order=["umato", "tsne", "pacmap", "umap"]
 )
 y_ticks = [
-	"PCA", "$\mathbf{UMATO}$", "L-MDS", "PaCMAP", "$t$-SNE", "LLE",  "TriMap",  "LAMP","UMAP"
+	"$\mathbf{UMATO}$", "$t$-SNE", "PaCMAP", "UMAP"
 ]
 plt.yticks(np.arange(len(y_ticks)), y_ticks)
 plt.xscale("log")
@@ -69,8 +62,8 @@ plt.tight_layout()
 
 
 
-plt.savefig("./03_01_stability_subsampling/plots/stability_subsampling.png", dpi=300)
-plt.savefig("./03_01_stability_subsampling/plots/stability_subsampling.pdf", dpi=300)
+plt.savefig("./03_02_stability_init/plots/stability_init.png", dpi=300)
+plt.savefig("./03_02_stability_init/plots/stability_init.pdf", dpi=300)
 
 plt.clf()
 

@@ -16,13 +16,13 @@ import numpy as np
 from scipy.spatial.distance import cdist
 
 
-def run_umap(X, n_neighbors, min_dist):
+def run_umap(X, n_neighbors, min_dist, init="spectral"):
 	n_neighbors = int(n_neighbors)
 	min_dist = float(min_dist)
-	reducer = umap.UMAP(n_neighbors=n_neighbors, min_dist=min_dist, n_components=2)
+	reducer = umap.UMAP(n_neighbors=n_neighbors, min_dist=min_dist, n_components=2, init=init)
 	return reducer.fit_transform(X)
 
-def run_pacmap(X, n_neighbors, MN_ratio, FP_ratio):
+def run_pacmap(X, n_neighbors, MN_ratio, FP_ratio, init="random"):
 	n_neighbors = int(n_neighbors)
 	MN_ratio = float(MN_ratio)
 	FP_ratio = float(FP_ratio)
@@ -33,26 +33,26 @@ def run_pacmap(X, n_neighbors, MN_ratio, FP_ratio):
 		FP_ratio = 1 / n_neighbors
 
 	reducer = pacmap.PaCMAP(n_neighbors=n_neighbors, MN_ratio=MN_ratio, FP_ratio=FP_ratio)
-	return reducer.fit_transform(X)
+	return reducer.fit_transform(X, init=init)
 
 
-def run_trimap(X, n_inliers, n_outliers):
+def run_trimap(X, n_inliers, n_outliers, init=None):
 	n_inliers = int(n_inliers)
 	n_outliers = int(n_outliers)
 	reducer = trimap.TRIMAP(n_inliers=n_inliers, n_outliers=n_outliers)
-	return reducer.fit_transform(X)
+	return reducer.fit_transform(X, init=init)
 
-def run_tsne(X, perplexity):
+def run_tsne(X, perplexity, init="pca"):
 	perplexity = float(perplexity)
-	reducer = TSNE(perplexity=perplexity)
+	reducer = TSNE(perplexity=perplexity, init=init)
 	return reducer.fit_transform(X)
 
-def run_umato(X, n_neighbors, min_dist, hub_num):
+def run_umato(X, n_neighbors, min_dist, hub_num, init="pca"):
 	n_neighbors = int(n_neighbors)
 	min_dist = float(min_dist)
 	hub_num = int(hub_num)
 
-	reducer = umato.UMATO(n_neighbors=n_neighbors, min_dist=min_dist, hub_num=hub_num, random_state=42)
+	reducer = umato.UMATO(n_neighbors=n_neighbors, min_dist=min_dist, hub_num=hub_num, init="pca")
 	return reducer.fit_transform(X)
 
 def run_pca(X):
