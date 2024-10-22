@@ -1,11 +1,12 @@
 import umap
 import pacmap
-import umato
+from umato.src import umato
 import trimap
 from MulticoreTSNE import MulticoreTSNE as TSNE
 # from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 from sklearn.manifold import Isomap, LocallyLinearEmbedding
+from sklearn.manifold import MDS
 
 
 from sklearn.datasets import load_iris
@@ -59,9 +60,13 @@ def run_pca(X):
 	reducer = PCA(n_components=2)
 	return reducer.fit_transform(X)
 
+def run_mds(X):
+	reducer = MDS(n_components=2)
+	return reducer.fit_transform(X)
+
 def run_isomap(X, n_neighbors):
 	n_neighbors = int(n_neighbors)
-	reducer = Isomap(n_neighbors=n_neighbors, n_components=2)
+	reducer = Isomap(n_neighbors=n_neighbors, n_components=2, n_jobs=-1)
 	return reducer.fit_transform(X)
 
 

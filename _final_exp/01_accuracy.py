@@ -5,6 +5,7 @@ import os, json
 import numpy as np
 from zadu import zadu
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from bayes_opt import BayesianOptimization
 from tqdm import tqdm
@@ -12,26 +13,31 @@ import time
 import warnings
 warnings.filterwarnings("ignore")
 
-DATASETS = os.listdir("../datasets/npy/")
-METADATA = json.load(open("./_metadata.json", "r"))
+DATASETS = os.listdir("../datasets_candidate/npy/")
+METADATA = json.load(open("./_metadata_umato.json", "r"))
 SPEC = json.load(open("./_spec.json", "r"))
 
 
 
 for dataset in DATASETS:
+	if dataset != "optical_recognition_of_handwritten_digits":
+		continue
+
 	print(f"{dataset} computing...")
-	if os.path.exists(f"./01_accuracy/results/{dataset}.csv"):
+	if os.path.exists(f"./01_accuracy/umato_results/{dataset}.csv"):
 		continue
 	
 	## load file and initialize zadu object
-	raw = np.load(f"../datasets/npy/{dataset}/data.npy")	
+	raw = np.load(f"../datasets_candidate/npy/{dataset}/data.npy")	
+	label = np.load(f"../datasets_candidate/npy/{dataset}/label.npy")
 
 	size = raw.shape[0]
 
-	if size <= 10000:
+	if size > 10000:
 		continue
 
 	zadu_obj = zadu.ZADU([{ "id": "tnc", "params": { "k": 10 } }], raw)
+	# zadu_obj = zadu.ZADU([{ "id": "kl_div", "params": { "sigma": 0.1 } }], raw)
 
 
 	## phase 1: find optimal embedding based on KL divergence (0.1)
@@ -59,6 +65,7 @@ for dataset in DATASETS:
 					print("Generating embedding:", end - start)
 					start = time.time()
 					score = (2 * zadu_obj.measure(emb)[0]["trustworthiness"] * zadu_obj.measure(emb)[0]["continuity"]) / (zadu_obj.measure(emb)[0]["trustworthiness"] + zadu_obj.measure(emb)[0]["continuity"])
+					score = - zadu_obj.measure(emb)[0]["kl_divergence"]
 					end = time.time()
 					print("Computing score:", end - start)
 				except:
@@ -105,6 +112,13 @@ for dataset in DATASETS:
 				dr_technique_list.append(dr_technique)
 				metric_list.append(metric)
 				value_list.append(value)
+		
+		## save emb as plot as matplotlib
+		plt.figure(figsize=(10, 10))
+
+		plt.scatter(emb[:, 0], emb[:, 1], c=label, cmap="tab10")
+		plt.title(f"{dr_technique}")
+		plt.savefig(f"./01_accuracy/embeddings/{dataset}_{dr_technique}.png")
 	
 	## save
 	df = pd.DataFrame({
@@ -113,7 +127,12 @@ for dataset in DATASETS:
 		"value": value_list
 	})
 
-	df.to_csv(f"./01_accuracy/results/{dataset}.csv", index=False)
+
+
+
+
+
+	df.to_csv(f"./01_accuracy/umato_results/{dataset}.csv", index=False)
 
 
 

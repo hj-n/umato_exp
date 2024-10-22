@@ -10,7 +10,7 @@ from scipy import stats
 
 from tabulate import tabulate
 
-FILES = os.listdir("./01_accuracy/cherry/")
+FILES = os.listdir("./01_accuracy/umato_results/")
 METRICS = ["trustworthiness", "continuity", "mrre_false", "mrre_missing", "kl_divergence", "distance_to_measure", "stress"]
 
 # METRICS = ["kl_divergence_sigma_1", "kl_divergence_sigma_0.1", "kl_divergence_sigma_0.01"]
@@ -18,7 +18,8 @@ METRICS = ["trustworthiness", "continuity", "mrre_false", "mrre_missing", "kl_di
 # METRICS = ["steadiness", "cohesiveness"]
 
 # DR_TECHNIQUE = ["pca", "lle", "umap", "trimap", "pacmap", "tsne", "umato", "lamp", "lmds"]
-DR_TECHNIQUE = ["umato", "umap", "tsne", "pca", "lle", "pacmap", "trimap", "lamp", "lmds"]
+# DR_TECHNIQUE = ["umato", "umap", "tsne", "pca", "lle", "pacmap", "trimap", "lamp", "lmds"]
+DR_TECHNIQUE = ["umato"]
 
 # METRICS = ["distance_to_measure_sigma_1", "distance_to_measure_sigma_0.1", "distance_to_measure_sigma_0.01"]
 
@@ -40,7 +41,7 @@ metric_full = []
 value_full = []
 dataset_full = []
 for file in FILES:
-	result = pd.read_csv("./01_accuracy/results/" + file)
+	result = pd.read_csv("./01_accuracy/umato_results/" + file)
 	dr_technique_list = result["dr_technique"].to_numpy().tolist()
 	metric_list = result["metric"].to_numpy().tolist()
 	value_list = result["value"].to_numpy().tolist()

@@ -1,4 +1,9 @@
 {
+		"isomap": {
+			"bounds": {"n_neighbors": [2, 100]},
+			"scal": { "n_neighbors": 15 },
+			"default": { "n_neighbors": 15 }
+		},
 		"umap" : {
 			"bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99] },
 			"scal": { "n_neighbors": 15, "min_dist": 0.1 },
