@@ -12,6 +12,7 @@ from sklearn.decomposition import PCA, TruncatedSVD
 
 import scipy.sparse as sp
 
+from copy import deepcopy
 
 DATASETS = os.listdir("../datasets_candidate/npy/")
 METADATA = json.load(open("./_metadata.json", "r"))
@@ -23,7 +24,7 @@ for dataset in DATASETS:
 
 
 	print(dataset)
-	if os.path.exists(f"./02_scalability/results/{dataset}.json"):
+	if os.path.exists(f"./02_scalability/results_lamp/{dataset}.json"):
 		continue
 
 	X = np.load(f"../datasets_candidate/npy/{dataset}/data.npy")
@@ -35,7 +36,7 @@ for dataset in DATASETS:
 			continue
 		print("-", dr_technique)
 		times = []
-		for i in tqdm(range(5)):
+		for i in tqdm(range(13)):
 
 			runner_function_name = f"run_{dr_technique}"
 
@@ -45,31 +46,33 @@ for dataset in DATASETS:
 
 			times.append(end-start)
 		
-		result[dr_technique] = np.mean(times)
+		result[dr_technique] = deepcopy(times[3:])
 			
 		## save result 
-	with open(f"./02_scalability/results/{dataset}.json", "w") as f:
+	with open(f"./02_scalability/results_lamp/{dataset}.json", "w") as f:
 		json.dump(result, f)
 
 
 
-DR_TECHNIQUES = ["pca", "umap", "pacmap", "trimap"]			
-DR_TECHNIQUES = ["pca"]
+DR_TECHNIQUES = ["lle"]			
+# DR_TECHNIQUES = ["pca"]
 
-for dataset in [ "covertype", "kddcup99"]:
+for dataset in ["covertype", "rcv1", "kddcup99"]:
 	print(dataset)
 
-	if os.path.exists(f"./02_scalability/results_big/{dataset}.json"):
-		continue
+	# if os.path.exists(f"./02_scalability/results_big/{dataset}.json"):
+	# 	continue
 
 	if dataset == "covertype":
 		X = fetch_covtype().data
 	elif dataset == "rcv1":
 		X = fetch_rcv1().data
-		X = TruncatedSVD(n_components=500).fit_transform(X)
+		X = TruncatedSVD(n_components=50).fit_transform(X)
 	elif dataset == "kddcup99":
 		X = fetch_kddcup99().data
 		X = X[:, np.array([type(x) != bytes for x in X[0]])]
+
+
 		# X = sp.csr_matrix(X, dtype=np.float32)
 		# X = X.toarray()
 
@@ -94,7 +97,7 @@ for dataset in [ "covertype", "kddcup99"]:
 
 			
 	## save result
-	with open(f"./02_scalability/results_big/{dataset}.json", "w") as f:
+	with open(f"./02_scalability/results_big_umato/{dataset}.json", "w") as f:
 		json.dump(result, f)
 
 		

@@ -1,6 +1,7 @@
 import umap
 import pacmap
 from umato.src import umato
+import umap
 import trimap
 from MulticoreTSNE import MulticoreTSNE as TSNE
 # from sklearn.manifold import TSNE
@@ -16,6 +17,11 @@ import numpy as np
 
 from scipy.spatial.distance import cdist
 
+def run_umap_pca(X, n_neighbors, min_dist, init="pca"):
+	n_neighbors = int(n_neighbors)
+	min_dist = float(min_dist)
+	reducer = umap.UMAP(n_neighbors=n_neighbors, min_dist=min_dist, n_components=2, init=init)
+	return reducer.fit_transform(X)
 
 def run_umap(X, n_neighbors, min_dist, init="spectral"):
 	n_neighbors = int(n_neighbors)
@@ -43,7 +49,7 @@ def run_trimap(X, n_inliers, n_outliers, init=None):
 	reducer = trimap.TRIMAP(n_inliers=n_inliers, n_outliers=n_outliers)
 	return reducer.fit_transform(X, init=init)
 
-def run_tsne(X, perplexity, init="pca"):
+def run_tsne(X, perplexity, init="random"):
 	perplexity = float(perplexity)
 	reducer = TSNE(perplexity=perplexity, init=init)
 	return reducer.fit_transform(X)
