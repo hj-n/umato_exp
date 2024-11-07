@@ -1,7 +1,67 @@
 {
-		"umato": {
-      "bounds": {"n_neighbors": [2, 100], "min_dist": [0.01, 0.99], "hub_num": [20, 400]},
-			"scal": { "n_neighbors": 15, "min_dist": 0.1, "hub_num": 75 },
-			"default": { "n_neighbors": 15, "min_dist": 0.1, "hub_num": 75 }
+"umato": {
+	"bounds": {
+		"n_neighbors": [
+			2,
+			100
+		],
+		"min_dist": [
+			0.01,
+			0.99
+		],
+		"hub_num": [
+			20,
+			400
+		]
+	},
+	"scal": {
+		"n_neighbors": 15,
+		"min_dist": 0.1,
+		"hub_num": 75
+	},
+	"default": {
+		"n_neighbors": 15,
+		"min_dist": 0.1,
+		"hub_num": 75
+	}
+},
+	"tsne": {
+		"bounds": {
+			"perplexity": [
+				5,
+				50
+			]
+		},
+		"scal": {
+			"perplexity": 30
+		},
+		"default": {
+			"perplexity": 30
 		}
+	},
+	"umap": {
+		"bounds": {
+			"n_neighbors": [
+				2,
+				100
+			],
+			"min_dist": [
+				0.01,
+				0.99
+			]
+		},
+		"scal": {
+			"n_neighbors": 15,
+			"min_dist": 0.1
+		},
+		"default": {
+			"n_neighbors": 15,
+			"min_dist": 0.1
+		}
+	},
+	"pca": {
+		"bounds": {},
+		"default": {},
+		"scal": {}
+	}
 }

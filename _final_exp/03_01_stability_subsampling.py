@@ -16,7 +16,7 @@ from zadu import zadu
 import _permutation as perm
 
 DATASETS = os.listdir("../datasets_candidate/npy")
-METADATA = json.load(open("./_metadata.json", "r"))
+METADATA = json.load(open("./_metadata_isomap.json", "r"))
 
 # SAMPLING = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 
@@ -33,7 +33,7 @@ for dataset in DATASETS:
 	X = np.load(f"../datasets_candidate/npy/{dataset}/data.npy")
 	size = X.shape[0]
 
-	if size < 9999 or size > 10001:
+	if size < 3000:
 		continue
 
 	dr_technique_list = []

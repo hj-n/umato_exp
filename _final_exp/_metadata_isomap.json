@@ -1,7 +1,7 @@
 {
-		"lamp": {
-			"bounds": {},
-			"default": {},
-			"scal": {}
+		"isomap": {
+			"bounds": {"n_neighbors": [2, 100]},
+			"scal": { "n_neighbors": 15 },
+			"default": { "n_neighbors": 15 }
 		}
 }
