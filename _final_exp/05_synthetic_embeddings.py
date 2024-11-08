@@ -54,7 +54,7 @@ def spheres_generator():
 
 generator_names = ["swissroll", "scurve", "mammoth", "spheres"]
 
-
+"""
 
 for i, generator in enumerate([swissroll_generator, scurve_generator, mammoth_generator, spheres_generator]):
 	X, labels = generator()
@@ -126,12 +126,13 @@ for i, generator in enumerate([swissroll_generator, scurve_generator, mammoth_ge
 		with open(f"./05_synthetic_embeddings/{dr_technique}_{generator_name}.json", "w") as f:
 			json.dump(emb.tolist(), f)
 
+"""
 
+X, labels = spheres_generator()
 
+emb = drp.run_umato(X, n_neighbors=50, min_dist=0.1, hub_num=300)
 
-# emb = drp.run_umato(X, n_neighbors=100, min_dist=0.15, hub_num=300)
-
-# with open(f"./05_synthetic_embeddings/umatomy_scurve.json", "w") as f:
-# 	json.dump(emb.tolist(), f)
+with open(f"./05_synthetic_embeddings/umatomy_spheres.json", "w") as f:
+	json.dump(emb.tolist(), f)
 
 

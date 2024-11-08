@@ -46,6 +46,9 @@ for i, dataset in enumerate(datasets):
 
 		if dataset == "swissroll" and technique == "umato":
 			technique = "umatomy"
+		
+		if dataset == "spheres" and technique == "umato":
+			technique = "umatomy"
 
 		if not os.path.exists(f"./05_synthetic_embeddings/{technique}_{dataset}.json"):
 			continue

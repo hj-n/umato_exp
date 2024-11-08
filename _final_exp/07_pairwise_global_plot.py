@@ -34,6 +34,8 @@ plt.tight_layout()
 
 
 plt.savefig(f"./07_pairwise_global/plot/embeddings.png")
+## svg save
+plt.savefig(f"./07_pairwise_global/plot/embeddings.svg")
 
 plt.clf()
 
@@ -46,15 +48,28 @@ for dataset_name in dataset:
 		with open(f"./07_pairwise_global/results/{dataset_name}_{technique_name}.json", "r") as f:
 			data = json.load(f)
 		
-		matrix = data["pairwise_matrix"]	
+		matrix = np.array(data["pairwise_matrix"])
 		range_matrix[0] = min(range_matrix[0], np.min(matrix))
 		range_matrix[1] = max(range_matrix[1], np.max(matrix))
+
 
 	for technique_name in techniques:
 		with open(f"./07_pairwise_global/results/{dataset_name}_{technique_name}.json", "r") as f:
 			data = json.load(f)
 		
-		matrix = data["pairwise_matrix"]
+		matrix = np.array(data["pairwise_matrix"])
+
+		newmatrix = np.zeros((matrix.shape[0], matrix.shape[0]))
+		for i in range(matrix.shape[0]):
+			## insert i, j value as 0 (currently have no)
+			currindex = 0
+			for j in range(len(newmatrix)):
+				if j == i:
+					continue
+				newmatrix[i][j] = matrix[i][currindex]
+				currindex += 1
+			
+		matrix = newmatrix.tolist()
 		score = round(data["kl_divergence"], 3)
 		axs[dataset.index(dataset_name), techniques.index(technique_name)].imshow(matrix, cmap="Blues", vmin=range_matrix[0], vmax=range_matrix[1], aspect=100, extent=[0,100,0,1])
 		axs[dataset.index(dataset_name), techniques.index(technique_name)].set_title(f"{dataset_name}_{technique_name}_{score}")
@@ -72,3 +87,5 @@ for dataset_name in dataset:
 
 plt.tight_layout()
 plt.savefig(f"./07_pairwise_global/plot/kl.png")
+## svg save
+plt.savefig(f"./07_pairwise_global/plot/kl.svg")
